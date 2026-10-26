@@ -887,7 +887,8 @@ function initMobileNav() {
   const mobileDrawer = document.getElementById('mobileNavDrawer');
 
   if (mobileBtn && mobileDrawer) {
-    mobileBtn.addEventListener('click', () => {
+    mobileBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
       mobileDrawer.classList.toggle('open');
       const isOpen = mobileDrawer.classList.contains('open');
       mobileBtn.innerHTML = isOpen ? getIconSvg('x') : getIconSvg('menu');
@@ -898,6 +899,14 @@ function initMobileNav() {
         mobileDrawer.classList.remove('open');
         mobileBtn.innerHTML = getIconSvg('menu');
       });
+    });
+
+    // Tap outside to close drawer on mobile
+    document.addEventListener('click', (e) => {
+      if (mobileDrawer.classList.contains('open') && !mobileDrawer.contains(e.target) && !mobileBtn.contains(e.target)) {
+        mobileDrawer.classList.remove('open');
+        mobileBtn.innerHTML = getIconSvg('menu');
+      }
     });
   }
 }

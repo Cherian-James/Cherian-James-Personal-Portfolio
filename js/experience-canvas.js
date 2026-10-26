@@ -133,8 +133,8 @@
       rawProgress = 0;
     }
 
-    // Zone 1: Dedicated Title Card Reading Time (0 to 0.12, ~850px buffer)
-    const readingZone = 0.12;
+    // Zone 1: Dedicated Title Card Reading Time (0 to 0.12 on desktop, 0.35 on mobile)
+    const readingZone = window.innerWidth <= 768 ? 0.35 : 0.12;
 
     // Zone 2: Illusion starts slowly and accelerates into the deep circles
     if (rawProgress <= readingZone) {

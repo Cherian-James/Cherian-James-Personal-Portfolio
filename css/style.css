@@ -73,6 +73,9 @@ html {
   scroll-behavior: smooth;
   font-size: 16px;
   color-scheme: dark;
+  overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
 }
 
 body {
@@ -86,6 +89,8 @@ body {
   color: var(--text-main);
   line-height: 1.6;
   overflow-x: hidden;
+  max-width: 100vw;
+  width: 100%;
   position: relative;
   min-height: 100vh;
   -webkit-font-smoothing: antialiased;
@@ -1785,6 +1790,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: var(--shadow-md);
   user-select: none;
   cursor: ew-resize;
+  container-type: inline-size;
 }
 
 .slider-image {
@@ -1809,6 +1815,7 @@ h1, h2, h3, h4, h5, h6 {
 
 .slider-before .slider-image {
   width: 100%;
+  width: 100cqw;
   max-width: none;
 }
 
@@ -2790,6 +2797,11 @@ textarea.form-control {
 
 /* Responsive Media Queries */
 @media (max-width: 1024px) {
+  /* Hide vertical editorial side rails on tablets and below */
+  .editorial-rail-left,
+  .editorial-rail-right {
+    display: none !important;
+  }
   .about-layout {
     grid-template-columns: 1fr;
     gap: 3rem;
@@ -2801,83 +2813,121 @@ textarea.form-control {
   .contact-layout {
     grid-template-columns: 1fr;
   }
+  .works-grid {
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    gap: 1.5rem;
+  }
 }
 
 @media (max-width: 768px) {
-  .container {
-    padding-left: 1.25rem;
-    padding-right: 1.25rem;
+  /* Prevent horizontal wobble and hide desktop side rails and decorative overflows */
+  .editorial-rail-left,
+  .editorial-rail-right {
+    display: none !important;
   }
-  .hero-profile-header {
-    flex-direction: column;
-    text-align: center;
-    padding: 1.5rem 1.25rem;
-    gap: 1.25rem;
+  .hero-bg-text-giant,
+  .hero-vector-decor,
+  .comic-sfx-bubble,
+  .hero-floating-logos {
+    display: none !important;
   }
-  .hero-avatar-box {
-    width: 135px;
-    height: 135px;
+
+  /* Compact voyage runway for smooth mobile scrolling (3-4 natural swipes instead of 25) */
+  .hero-voyage-section {
+    min-height: 240vh !important;
   }
-  .hero-profile-topline {
-    justify-content: center;
+  .roller-coaster-runway,
+  .illusion-runway {
+    height: 160vh !important;
   }
-  .hero-stats-row {
-    grid-template-columns: repeat(2, 1fr);
+
+  /* Climax Ending Text: "WELCOME TO MY WORKS" */
+  .voyage-ending-text {
+    padding: 1.5rem 1rem !important;
+    width: 92% !important;
+    border-radius: var(--radius-lg) !important;
   }
-  .hero-cta-group {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.85rem;
-    margin-bottom: 2.5rem;
+  .ending-badge {
+    font-size: 0.76rem !important;
+    padding: 0.35rem 1rem !important;
+    margin-bottom: 0.85rem !important;
   }
-  .hero-cta-group .btn {
-    width: 100%;
-    justify-content: center;
+  .ending-title {
+    font-size: clamp(1.8rem, 7vw, 2.3rem) !important;
+    margin-bottom: 0.85rem !important;
   }
-  .hero-scroll-indicator {
-    display: none;
+  .ending-sub {
+    font-size: 0.92rem !important;
+    margin-bottom: 1.25rem !important;
   }
-  .works-grid {
-    grid-template-columns: 1fr;
+  .ending-cta-row {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    width: 100% !important;
   }
-  .moment-drawer-layout {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
+  .ending-cta-row .btn {
+    width: 100% !important;
+    justify-content: center !important;
   }
-  .moment-header {
-    padding: 1.2rem 1.25rem;
-    gap: 1rem;
+
+  /* Header & Navigation: Clean fit on all phone screens down to 320px */
+  .navbar {
+    padding: 0.75rem 0 !important;
   }
-  .moment-role-title {
-    font-size: 1.05rem;
+  .nav-container {
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
   }
-  .comparison-labels {
-    flex-direction: column;
-    gap: 0.6rem;
-    align-items: flex-start;
+  .nav-brand {
+    gap: 0.5rem;
   }
-  .comic-sfx-bubble {
-    font-size: 0.78rem;
-    padding: 0.25rem 0.6rem;
+  .brand-badge {
+    width: 34px;
+    height: 34px;
+    font-size: 0.85rem;
+  }
+  .brand-name {
+    font-size: 0.98rem;
+  }
+  .brand-info .brand-role {
+    display: none !important;
   }
   .nav-links {
     display: none;
   }
+  .nav-actions {
+    gap: 0.5rem;
+  }
+  .nav-actions .btn {
+    display: none !important;
+  }
+  .audio-toggle-btn {
+    width: 36px;
+    height: 36px;
+  }
   .mobile-menu-btn {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    padding: 6px;
   }
   .mobile-nav-drawer {
     display: flex;
     flex-direction: column;
     position: fixed;
-    top: 70px;
+    top: 60px;
     left: 0;
     width: 100%;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
     background: var(--bg-glass-heavy);
     backdrop-filter: blur(20px);
-    padding: 2rem;
+    -webkit-backdrop-filter: blur(20px);
+    padding: 1.5rem 1.25rem;
     border-bottom: 1px solid var(--border-subtle);
-    gap: 1.5rem;
+    gap: 1.25rem;
     transform: translateY(-120%);
     transition: transform var(--transition-normal);
     z-index: 999;
@@ -2885,6 +2935,236 @@ textarea.form-control {
   .mobile-nav-drawer.open {
     transform: translateY(0);
   }
+
+  /* Containers & Section Spacing */
+  .container {
+    padding-left: 1.15rem;
+    padding-right: 1.15rem;
+  }
+  .section-title {
+    font-size: 1.95rem !important;
+  }
+  .section-subtitle {
+    font-size: 0.92rem !important;
+  }
+  .section-header {
+    margin-bottom: 2.25rem !important;
+  }
+
+  /* Hero profile and typography */
+  .hero-profile-header {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.25rem 1rem !important;
+    margin-bottom: 1.25rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    gap: 1rem !important;
+  }
+  .hero-avatar-box {
+    width: 100px !important;
+    height: 100px !important;
+    margin: 0 auto !important;
+  }
+  .hero-profile-topline {
+    flex-direction: column !important;
+    gap: 0.35rem !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .hero-profile-name {
+    font-size: 1.3rem !important;
+  }
+  .hero-profile-badge {
+    font-size: 0.7rem !important;
+    padding: 0.2rem 0.65rem !important;
+  }
+  .hero-profile-role {
+    font-size: 0.85rem !important;
+  }
+  .hero-profile-desc {
+    font-size: 0.85rem !important;
+    line-height: 1.45 !important;
+  }
+  .hero-status-pill {
+    margin: 0 auto 1.25rem auto !important;
+  }
+  .hero-title {
+    font-size: clamp(1.9rem, 7.5vw, 2.6rem) !important;
+    margin-bottom: 1.15rem !important;
+    text-align: center;
+    line-height: 1.12 !important;
+  }
+  .hero-tagline {
+    justify-content: center;
+    gap: 0.45rem;
+    margin-bottom: 1.15rem;
+  }
+  .hero-tagline .pill-tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.7rem;
+  }
+  .hero-description {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    margin-bottom: 1.5rem;
+    text-align: center;
+  }
+  .hero-cta-group {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    margin-bottom: 1.75rem;
+  }
+  .hero-cta-group .btn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.7rem 1.25rem;
+  }
+  .hero-stats-row {
+    grid-template-columns: repeat(3, 1fr) !important;
+    gap: 0.5rem !important;
+    padding-top: 1.25rem !important;
+    margin-top: 1.25rem !important;
+    text-align: center;
+  }
+  .stat-num {
+    font-size: 1.45rem !important;
+  }
+  .stat-label {
+    font-size: 0.65rem !important;
+    letter-spacing: 0.02em !important;
+  }
+  .hero-scroll-indicator {
+    display: none;
+  }
+
+  /* Showreel section */
+  .showreel-section {
+    padding: 3.5rem 0 !important;
+  }
+  .theater-wrapper {
+    padding: 0.75rem !important;
+    border-radius: var(--radius-md) !important;
+  }
+  .video-custom-controls {
+    padding: 0.6rem 0.75rem !important;
+  }
+  .ctrl-btn {
+    width: 36px !important;
+    height: 36px !important;
+  }
+
+  /* Works section & filter */
+  .works-section {
+    padding: 4rem 0 !important;
+  }
+  .filter-bar {
+    gap: 0.45rem;
+    margin-bottom: 1.75rem;
+    justify-content: center;
+  }
+  .filter-btn {
+    padding: 0.42rem 0.85rem;
+    font-size: 0.78rem;
+  }
+  .works-grid {
+    grid-template-columns: 1fr;
+    gap: 1.35rem;
+  }
+  .work-details {
+    padding: 1.2rem 1rem;
+  }
+  .work-title {
+    font-size: 1.15rem;
+  }
+
+  /* Before/After comparison */
+  .comparison-card {
+    padding: 1.15rem 0.95rem;
+  }
+  .comparison-labels {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  /* Career moments accordion */
+  .moment-header {
+    padding: 1.1rem 1rem;
+    gap: 0.75rem;
+  }
+  .moment-title-group {
+    gap: 0.65rem;
+  }
+  .moment-role-title {
+    font-size: 1.05rem;
+  }
+  .moment-card.active .moment-drawer {
+    max-height: 800px;
+    padding: 1.15rem 1rem 1.35rem;
+  }
+  .moment-drawer-layout {
+    grid-template-columns: 1fr;
+    gap: 1.15rem;
+  }
+
+  /* Timeline */
+  .timeline-track {
+    padding-left: 1.75rem;
+  }
+  .timeline-node {
+    left: -1.75rem;
+    width: 18px;
+    height: 18px;
+  }
+  .timeline-card {
+    padding: 1.25rem 1rem;
+    margin-bottom: 1.75rem;
+  }
+  .timeline-role {
+    font-size: 1.15rem;
+  }
+
+  /* About section photo badge */
+  .about-section {
+    padding: 3.5rem 0 !important;
+  }
+  .photo-badge-floating {
+    position: relative !important;
+    right: auto !important;
+    bottom: auto !important;
+    margin: 1.25rem auto 0 auto !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  /* Skills grid */
+  .skills-section {
+    padding: 3.5rem 0 !important;
+  }
+  .skills-grid {
+    grid-template-columns: 1fr;
+    gap: 1.15rem;
+  }
+  .skill-pillar-card {
+    padding: 1.35rem 1.15rem;
+  }
+
+  /* Contact section */
+  .contact-section {
+    padding: 3.5rem 0 !important;
+  }
+  .contact-layout {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+  .contact-card,
+  .contact-form-card {
+    padding: 1.35rem 1.1rem;
+  }
+
+  /* Footer */
   .footer-content {
     flex-direction: column;
     align-items: flex-start;
@@ -2895,73 +3175,70 @@ textarea.form-control {
     gap: 0.75rem;
     text-align: center;
   }
+
+  /* Hide custom cursor and desktop hint */
   .canvas-hint {
     display: none;
   }
-  .custom-cursor, .custom-cursor-follower {
+  .custom-cursor,
+  .custom-cursor-follower {
     display: none !important;
   }
 }
 
 @media (max-width: 480px) {
   .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.95rem;
+    padding-right: 0.95rem;
+  }
+  .hero-title {
+    font-size: 1.85rem !important;
   }
   .hero-stats-row {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
   }
   .credentials-list {
     grid-template-columns: 1fr;
   }
   .theater-wrapper {
-    padding: 0.85rem;
-  }
-  .skills-grid {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
-  .skill-pillar-card {
-    padding: 1.5rem;
+    padding: 0.65rem !important;
   }
   .modal-overlay {
-    padding: 0.75rem;
+    padding: 0.5rem;
   }
   .modal-container {
-    max-height: 94vh;
+    max-height: 96vh;
     border-radius: var(--radius-md);
   }
+  .modal-close-btn {
+    top: 0.6rem;
+    right: 0.6rem;
+    width: 34px;
+    height: 34px;
+  }
   .modal-body {
-    padding: 1.25rem;
+    padding: 1.15rem 0.85rem;
   }
   .modal-meta-grid {
     grid-template-columns: 1fr;
-    padding: 1rem;
-    gap: 0.85rem;
+    padding: 0.75rem;
+    gap: 0.65rem;
   }
   .modal-title {
-    font-size: 1.35rem;
-  }
-  .filter-bar {
-    gap: 0.5rem;
-    margin-bottom: 2rem;
+    font-size: 1.18rem;
   }
   .filter-btn {
-    padding: 0.45rem 0.95rem;
-    font-size: 0.8rem;
+    padding: 0.38rem 0.75rem;
+    font-size: 0.75rem;
   }
   .reel-switcher {
-    gap: 0.55rem;
-    margin-top: 1.25rem;
+    gap: 0.45rem;
+    margin-top: 1rem;
   }
   .reel-chip {
-    padding: 0.5rem 0.95rem;
-    font-size: 0.8rem;
-    gap: 0.45rem;
-  }
-  .contact-card,
-  .contact-form-card {
-    padding: 1.5rem 1.25rem;
+    padding: 0.45rem 0.8rem;
+    font-size: 0.76rem;
+    gap: 0.35rem;
   }
 }

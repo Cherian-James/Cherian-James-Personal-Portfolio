@@ -86,10 +86,11 @@ function initScrollReveals() {
     el.style.willChange = 'opacity, transform';
   });
 
+  const isMobile = window.innerWidth <= 768;
   const observerOptions = {
     root: null,
-    rootMargin: '0px 0px -80px 0px',
-    threshold: 0.12
+    rootMargin: isMobile ? '50px 0px 50px 0px' : '0px 0px -80px 0px',
+    threshold: isMobile ? 0.02 : 0.12
   };
 
   const observer = new IntersectionObserver((entries, obs) => {
