@@ -139,6 +139,13 @@
     targetMouseY = (e.clientY - height / 2) * 0.0012;
   }, { passive: true });
 
+  window.addEventListener('touchmove', (e) => {
+    if (e.touches && e.touches[0]) {
+      targetMouseX = (e.touches[0].clientX - width / 2) * 0.0012;
+      targetMouseY = (e.touches[0].clientY - height / 2) * 0.0012;
+    }
+  }, { passive: true });
+
   window.addEventListener('scroll', () => {
     const curY = window.pageYOffset || document.documentElement.scrollTop;
     scrollSpeed = (curY - lastScrollY) * 0.0006;
