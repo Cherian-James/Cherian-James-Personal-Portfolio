@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <radialGradient id="ueGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00f0ff" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#00f0ff" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="50%" stop-color="#e2e8f0"/>
+      <stop offset="100%" stop-color="#00f0ff"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Glow & Circular Badge -->
+  <circle cx="60" cy="60" r="56" fill="url(#ueGlow)" />
+  <circle cx="60" cy="60" r="50" fill="#0d111d" stroke="rgba(0, 240, 255, 0.5)" stroke-width="2" />
+  <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(255, 255, 255, 0.15)" stroke-width="1" stroke-dasharray="3 3" />
+
+  <!-- Iconic Unreal Engine Stylized 'U' Symbol -->
+  <path d="M60 22 C70 22 79 26 86 33 L78 40 C73 35 67 32 60 32 C45 32 33 44 33 60 C33 76 45 88 60 88 C67 88 74 85 79 80 L87 87 C80 94 70 98 60 98 C39 98 23 81 23 60 C23 39 39 22 60 22 Z" fill="url(#ueGrad)" />
+  <path d="M54 44 L66 44 L66 64 C66 68 64 71 60 71 C56 71 54 68 54 64 Z" fill="url(#ueGrad)" />
+  <circle cx="60" cy="74" r="3" fill="#00f0ff" />
+</svg>

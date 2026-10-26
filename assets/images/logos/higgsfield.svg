@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <radialGradient id="hfGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff2a55" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#ffd000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hfGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffd000"/>
+      <stop offset="50%" stop-color="#ff2a55"/>
+      <stop offset="100%" stop-color="#8b5cf6"/>
+    </linearGradient>
+    <linearGradient id="hfGrad2" x1="0%" y1="100%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="100%" stop-color="#ffd000"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Glow & Circular Badge -->
+  <circle cx="60" cy="60" r="56" fill="url(#hfGlow)" />
+  <circle cx="60" cy="60" r="50" fill="#0d111d" stroke="rgba(255, 42, 85, 0.45)" stroke-width="2" />
+  <circle cx="60" cy="60" r="44" fill="none" stroke="rgba(255, 208, 0, 0.2)" stroke-width="1" stroke-dasharray="4 4" />
+
+  <!-- Higgsfield AI Geometric Monogram "H" -->
+  <!-- Left Pillar -->
+  <path d="M40 32 L50 32 L50 88 L40 88 Z" fill="url(#hfGrad1)" rx="2"/>
+  <!-- Right Pillar -->
+  <path d="M70 32 L80 32 L80 88 L70 88 Z" fill="url(#hfGrad1)" rx="2"/>
+  <!-- Diagonal Neural Optical Wave Bridge -->
+  <path d="M46 54 L74 54 C77 54 78 57 76 60 L74 64 C72 67 70 66 67 66 L47 66 C44 66 43 63 45 60 Z" fill="url(#hfGrad2)" />
+  <!-- Spark Core Center Dot -->
+  <circle cx="60" cy="60" r="4" fill="#ffffff" />
+  <circle cx="60" cy="60" r="2" fill="#ffd000" />
+</svg>

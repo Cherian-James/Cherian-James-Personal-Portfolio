@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <defs>
+    <radialGradient id="blenderGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd000" stop-opacity="0.3"/>
+      <stop offset="100%" stop-color="#ea7600" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="blenderOrange" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff9900"/>
+      <stop offset="50%" stop-color="#ea7600"/>
+      <stop offset="100%" stop-color="#c85a00"/>
+    </linearGradient>
+    <linearGradient id="blenderBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00f0ff"/>
+      <stop offset="100%" stop-color="#0066cc"/>
+    </linearGradient>
+  </defs>
+  <!-- Background Glow Halo -->
+  <circle cx="60" cy="60" r="56" fill="url(#blenderGlow)" />
+  <circle cx="60" cy="60" r="50" fill="#0d111d" stroke="rgba(255, 208, 0, 0.4)" stroke-width="1.8" />
+  
+  <!-- Outer Orbit Arms -->
+  <!-- Top Right Arm -->
+  <path d="M60 38 C75 38 88 48 88 62 C88 50 78 42 60 42 Z" fill="url(#blenderOrange)" />
+  <!-- Bottom Right Arm -->
+  <path d="M72 74 C82 82 92 78 96 68 C90 74 80 76 72 74 Z" fill="url(#blenderOrange)" />
+  <!-- Left Sweep Main Body -->
+  <path d="M60 32 C42 32 30 46 30 62 C30 78 42 90 60 90 C76 90 88 80 88 66 C88 74 76 82 60 82 C46 82 38 72 38 62 C38 48 48 38 60 38 C74 38 84 46 88 56 C86 44 74 32 60 32 Z" fill="url(#blenderOrange)" />
+  
+  <!-- Central Eye -->
+  <circle cx="60" cy="62" r="16" fill="#ffffff" />
+  <circle cx="60" cy="62" r="11" fill="url(#blenderBlue)" />
+  <circle cx="63" cy="59" r="3.5" fill="#ffffff" />
+</svg>
