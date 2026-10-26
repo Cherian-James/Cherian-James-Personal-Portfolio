@@ -1,20 +1,16 @@
 /**
- * CHERIAN JAMES - FULL-SCREEN CIRCLES ILLUSION & SEQUENCED PIPELINE LOGOS
+ * CHERIAN JAMES - FULL-SCREEN ILLUSION TUNNEL & PIPELINE LOGOS (OPTIMIZED FOR MOBILE & DESKTOP)
  * 
- * Features:
- * 1. Webpage opens cleanly with the Title Card on top (unhurried reading buffer).
- * 2. 3D Glass Cube sits below title card, tracking cursor.
- * 3. Scrolling moves into the illusion slowly.
- * 4. PURE FULL-SCREEN CIRCLES: The user scrolls for some time diving deep into the
- *    golden concentric circles before any logos appear.
- * 5. SEQUENCED EXACT UPLOADED LOGO PNGs:
- *    - Only the clean logo PNG: NO text, NO outlines, NO cards around it.
+ * 1. Title Card Zone: Clean, unhurried reading space on top with the 3D Glass Cube floating below it.
+ * 2. Full-Screen Concentric Rings Tunnel: Camera dives deep into golden/cyan circular portal rounds.
+ * 3. 3D Glass Cube: Navigates with cursor/touch, diving into the vortex center.
+ * 4. Exact Uploaded Logo PNGs (Clean, no text labels, no synthetic outlines):
  *    - 1st: Blender PNG
  *    - 2nd: Unreal Engine PNG
  *    - 3rd: Higgsfield AI PNG
  *    - 4th: After Effects PNG
- *    - Generous scroll spacing so each logo is admired one by one.
- * 6. Climax reveal: "WELCOME TO MY WORKS" with ample reading time, leading into Works.
+ * 5. Climax: "WELCOME TO MY WORKS" reveals smoothly, leading into the Selected Works section.
+ * 6. Responsive: Optimized runways, touch tilt gestures, and mobile DPR scaling for 60 FPS.
  */
 
 (function () {
@@ -25,19 +21,28 @@
 
   const ctx = canvas.getContext('2d');
   let width = 0, height = 0, dpr = 1;
-  let rawProgress = 0;       // 0 to 1 through the whole hero-voyage section
-  let illusionProgress = 0;  // 0 to 1 (starts slowly after reading zone)
+  let isMobile = false;
+
+  let illusionProgress = 0;        // 0 to 1 through the illusion tunnel
   let targetIllusionProgress = 0;
   let scrollY = 0;
-  let animationFrameId;
+  let animationFrameId = null;
+  let isCanvasActive = true;
 
-  // Interactive Cursor Position (-1 to 1)
+  // Interactive Cursor / Touch Position (-1 to 1)
   let mouseX = 0, mouseY = 0;
   let targetMouseX = 0, targetMouseY = 0;
 
   window.addEventListener('mousemove', (e) => {
     targetMouseX = (e.clientX / window.innerWidth) * 2 - 1;
     targetMouseY = (e.clientY / window.innerHeight) * 2 - 1;
+  }, { passive: true });
+
+  window.addEventListener('touchstart', (e) => {
+    if (e.touches && e.touches[0]) {
+      targetMouseX = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+      targetMouseY = (e.touches[0].clientY / window.innerHeight) * 2 - 1;
+    }
   }, { passive: true });
 
   window.addEventListener('touchmove', (e) => {
@@ -48,7 +53,7 @@
   }, { passive: true });
 
   // -------------------------------------------------------------
-  // EXACT UPLOADED LOGO PNGs WITH WHITE STROKE OUTLINE & NAMES
+  // EXACT UPLOADED LOGO PNGs (Clean PNGs, no text, no synthetic outlines)
   // -------------------------------------------------------------
   const logoImgs = {
     blender: new Image(),
@@ -61,95 +66,77 @@
   logoImgs.higgsfield.src = 'assets/images/logos/higgsfield.png';
   logoImgs.aftereffects.src = 'assets/images/logos/aftereffects.png';
 
-  // White Silhouette Cache for High-Fidelity Stroke Outlines
-  const silhouetteCache = new WeakMap();
-
-  function getWhiteSilhouette(img) {
-    if (!img || !img.complete || img.naturalWidth === 0) return null;
-    if (silhouetteCache.has(img)) return silhouetteCache.get(img);
-
-    try {
-      const off = document.createElement('canvas');
-      off.width = img.naturalWidth;
-      off.height = img.naturalHeight;
-      const offCtx = off.getContext('2d');
-      offCtx.drawImage(img, 0, 0);
-      offCtx.globalCompositeOperation = 'source-in';
-      offCtx.fillStyle = '#ffffff';
-      offCtx.fillRect(0, 0, off.width, off.height);
-      silhouetteCache.set(img, off);
-      return off;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  // Pre-generate silhouettes once images load
-  ['blender', 'unreal', 'higgsfield', 'aftereffects'].forEach(key => {
-    logoImgs[key].onload = () => {
-      getWhiteSilhouette(logoImgs[key]);
-    };
-  });
-
-  // Sequenced Milestones in the Illusion Depth:
-  // 1. Scroll into deep circles first.
-  // 2. Each logo has an extended viewing runway (~1100px scroll per logo) with white outline & all-caps name below.
+  // Sequenced Milestones in the Illusion Tunnel (0.0 to 1.0):
+  // 0.00 - 0.18: Hypnotic tunnel entrance & deep diving rings
+  // 0.18 - 0.38: Blender PNG (peaks at 0.28)
+  // 0.36 - 0.56: Unreal Engine PNG (peaks at 0.46)
+  // 0.54 - 0.74: Higgsfield AI PNG (peaks at 0.64)
+  // 0.72 - 0.90: After Effects PNG (peaks at 0.81)
+  // 0.88 - 0.98: "WELCOME TO MY WORKS" climax
+  // 1.00: Selected Works section
   const milestoneLogos = [
     {
       id: 'blender',
-      name: 'BLENDER',
-      targetT: 0.33,      // 1st: BLENDER (visible ~0.25 to 0.41)
+      targetT: 0.28,
       img: logoImgs.blender
     },
     {
       id: 'unreal',
-      name: 'UNREAL ENGINE',
-      targetT: 0.48,      // 2nd: UNREAL ENGINE (visible ~0.40 to 0.56)
+      targetT: 0.46,
       img: logoImgs.unreal
     },
     {
       id: 'higgsfield',
-      name: 'HIGGSFIELD',
-      targetT: 0.63,      // 3rd: HIGGSFIELD (visible ~0.55 to 0.71)
+      targetT: 0.64,
       img: logoImgs.higgsfield
     },
     {
       id: 'aftereffects',
-      name: 'AFTER EFFECTS',
-      targetT: 0.78,      // 4th: AFTER EFFECTS (visible ~0.70 to 0.86)
+      targetT: 0.81,
       img: logoImgs.aftereffects
     }
   ];
 
-  // Update Scroll Progress with generous scroll zones
+  // -------------------------------------------------------------
+  // SCROLL PROGRESS CALCULATION
+  // -------------------------------------------------------------
   function updateScroll() {
     scrollY = window.pageYOffset || document.documentElement.scrollTop;
-    const rect = voyageSection.getBoundingClientRect();
+    const heroRect = voyageSection.getBoundingClientRect();
+
+    // Check if the hero section is visible in the viewport
+    if (heroRect.bottom <= 0) {
+      if (isCanvasActive) {
+        isCanvasActive = false;
+        canvas.style.display = 'none';
+      }
+      return;
+    } else {
+      if (!isCanvasActive) {
+        isCanvasActive = true;
+        canvas.style.display = 'block';
+        if (!animationFrameId) render();
+      }
+    }
+
+    const heroContent = document.querySelector('.hero-content-layer');
+    const heroContentHeight = heroContent ? heroContent.offsetHeight : window.innerHeight;
     const totalDist = voyageSection.offsetHeight - window.innerHeight;
-    if (totalDist > 0) {
-      const current = -rect.top;
-      rawProgress = Math.max(0, Math.min(1, current / totalDist));
+
+    // Transition start point: Title card is reading space; illusion accelerates as title card scrolls away
+    const transitionStart = isMobile ? heroContentHeight * 0.35 : heroContentHeight * 0.40;
+    const runwayDistance = Math.max(1, totalDist - transitionStart);
+
+    if (totalDist > 0 && scrollY > transitionStart) {
+      const norm = (scrollY - transitionStart) / runwayDistance;
+      targetIllusionProgress = Math.max(0, Math.min(1, norm));
     } else {
-      rawProgress = 0;
-    }
-
-    // Zone 1: Dedicated Title Card Reading Time (0 to 0.12 on desktop, 0.35 on mobile)
-    const readingZone = window.innerWidth <= 768 ? 0.35 : 0.12;
-
-    // Zone 2: Illusion starts slowly and accelerates into the deep circles
-    if (rawProgress <= readingZone) {
       targetIllusionProgress = 0;
-    } else if (rawProgress <= 0.85) {
-      const norm = (rawProgress - readingZone) / (0.85 - readingZone);
-      targetIllusionProgress = norm * norm * 0.7 + norm * 0.3; // Starts slowly!
-    } else {
-      targetIllusionProgress = 1.0;
     }
 
-    // Zone 3: "WELCOME TO MY WORKS" Extended Reading Buffer (0.86 to 0.97)
-    // ~800px of scrolling space: plenty of time to comfortably read before Works!
+    // Climax reveal: "WELCOME TO MY WORKS"
     if (endingText) {
-      if (rawProgress >= 0.86 && rawProgress <= 0.97) {
+      if (illusionProgress >= 0.87 && illusionProgress <= 0.99) {
         endingText.classList.add('visible');
       } else {
         endingText.classList.remove('visible');
@@ -159,41 +146,46 @@
 
   window.addEventListener('scroll', updateScroll, { passive: true });
 
+  // -------------------------------------------------------------
+  // RESIZE & DPR ADAPTATION
+  // -------------------------------------------------------------
   function resize() {
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    isMobile = window.innerWidth <= 768;
+    // Cap DPR on mobile to 1.75 for maximum smoothness and battery efficiency
+    dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.75 : 2);
     width = canvas.parentElement.clientWidth;
     height = canvas.parentElement.clientHeight;
-    canvas.width = width * dpr;
-    canvas.height = height * dpr;
-    ctx.scale(dpr, dpr);
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     initTunnelParticles();
   }
 
   // -------------------------------------------------------------
-  // FULL-SCREEN SIMPLE ROUNDS CONFIGURATION
-  // Concentric golden circular rings expanding across full screen
+  // CONCENTRIC SIMPLE ROUNDS ILLUSION TUNNEL CONFIGURATION
   // -------------------------------------------------------------
   const tunnelConfig = {
-    ringCount: 32,        // Concentric rounds
-    maxDepth: 4200,       // Deep spatial depth
-    cameraSpeed: 5200,    // Dive speed along Z
-    beadCount: 110        // Floating golden beads & droplets
+    ringCount: 30,
+    maxDepth: 4200,
+    cameraSpeed: 5000,
+    beadCount: 95
   };
 
-  // Floating Cyan & Sapphire Beads
+  // Floating Cyan & Sapphire Droplets / Beads
   let goldenBeads = [];
   function initTunnelParticles() {
     goldenBeads = [];
+    const count = isMobile ? 48 : tunnelConfig.beadCount;
     const cornerDist = Math.hypot(width, height) * 0.55;
-    for (let i = 0; i < tunnelConfig.beadCount; i++) {
+    for (let i = 0; i < count; i++) {
       const angle = Math.random() * Math.PI * 2;
-      const radius = 90 + Math.random() * (cornerDist * 1.35);
+      const radius = 60 + Math.random() * (cornerDist * 1.35);
       goldenBeads.push({
         x: Math.cos(angle) * radius,
         y: Math.sin(angle) * radius,
         baseZ: Math.random() * tunnelConfig.maxDepth,
-        size: 2.2 + Math.random() * 4.2,
-        color: Math.random() > 0.45 ? '#00f0ff' : '#0066ff', // Luminous cyan and electric sapphire blue!
+        size: isMobile ? (1.8 + Math.random() * 3.0) : (2.2 + Math.random() * 4.2),
+        color: Math.random() > 0.45 ? '#00f0ff' : '#0066ff',
         pulse: Math.random() * Math.PI * 2
       });
     }
@@ -204,7 +196,6 @@
   // -------------------------------------------------------------
   const heroCube = {
     size: 130,
-    wallThickness: 22,
     rotX: 0.35,
     rotY: 0.45,
     rotZ: 0.15,
@@ -239,7 +230,6 @@
       this.y = y;
       this.z = z;
     }
-
     rotateX(angle) {
       const cos = Math.cos(angle);
       const sin = Math.sin(angle);
@@ -249,7 +239,6 @@
       this.z = z;
       return this;
     }
-
     rotateY(angle) {
       const cos = Math.cos(angle);
       const sin = Math.sin(angle);
@@ -259,7 +248,6 @@
       this.z = z;
       return this;
     }
-
     rotateZ(angle) {
       const cos = Math.cos(angle);
       const sin = Math.sin(angle);
@@ -272,126 +260,55 @@
   }
 
   // -------------------------------------------------------------
-  // DRAW LOGO PNG WITH WHITE STROKE OUTLINE & NAME BELOW
-  // Features:
-  // 1. Extended scroll window (~1100px) with sustained peak visibility.
-  // 2. Crisp, solid white stroke outline contouring the logo.
-  // 3. Name below each logo: BLENDER, UNREAL ENGINE, HIGGSFIELD, AFTER EFFECTS
+  // DRAW EXACT UPLOADED LOGO PNG (Clean, no text, no synthetic outlines)
   // -------------------------------------------------------------
   function drawCleanLogoPNG(item, progress, fov, viewDist, centerX, centerY) {
     const dist = progress - item.targetT;
-    const halfWindow = 0.08; // Active visibility window in scroll (~1100px buffer per logo)
+    const halfWindow = isMobile ? 0.10 : 0.09;
     if (Math.abs(dist) > halfWindow) return;
 
-    // Map distance to normalized curve: -1 (deep in tunnel) to 0 (peak) to +1 (passing)
+    // Normalized curve: -1 (approaching from depth) -> 0 (peak) -> +1 (flying past)
     const normDist = dist / halfWindow;
 
-    // Sustained bell-curve alpha: stays at full 1.0 throughout central viewing zone!
-    const depthAlpha = Math.min(1.0, Math.cos(normDist * Math.PI * 0.5) * 1.35);
-    const alpha = depthAlpha * Math.min(1, illusionProgress * 3.5);
+    // Smooth bell-curve alpha: peaks at 1.0, gently fades at boundaries
+    const alpha = Math.cos(normDist * Math.PI * 0.5);
     if (alpha <= 0.02) return;
 
     // 3D relative Z distance through the concentric tunnel
-    const relZ = 650 - normDist * 850;
-    const scale = fov / (viewDist + Math.max(50, relZ));
+    const relZ = 320 - normDist * 280;
+    const scale = fov / (viewDist + Math.max(40, relZ));
 
-    // Dynamic responsive size (~200px to 260px at peak on desktop)
-    const logoBase = Math.min(width, height) * 0.20;
-    const normScale = 1050 / (viewDist + Math.max(50, relZ));
-    const logoSize = Math.max(75, Math.min(320, logoBase * normScale));
+    // Responsive size: adapted for mobile and desktop screens
+    const baseDim = isMobile ? Math.min(width, height) * 0.32 : Math.min(width, height) * 0.22;
+    const normScale = 620 / (viewDist + Math.max(40, relZ));
+    const maxAllowed = isMobile ? 150 : 230;
+    const minAllowed = isMobile ? 65 : 90;
+    const logoSize = Math.max(minAllowed, Math.min(maxAllowed, baseDim * normScale));
 
-    // Position in center of circular tunnel with gentle cursor parallax
-    const itemX = centerX + (mouseX * 45 * Math.min(1.5, scale));
-    const itemY = centerY + (mouseY * 35 * Math.min(1.5, scale));
+    // Centered in tunnel with touch/cursor parallax
+    const itemX = centerX + (mouseX * (isMobile ? 24 : 38) * Math.min(1.4, scale));
+    const itemY = centerY + (mouseY * (isMobile ? 18 : 28) * Math.min(1.4, scale));
 
     ctx.save();
     ctx.translate(itemX, itemY);
 
-    // 1. Soft atmospheric radial light behind the logo
-    const glowGrad = ctx.createRadialGradient(0, 0, logoSize * 0.15, 0, 0, logoSize * 0.85);
-    glowGrad.addColorStop(0, `rgba(0, 240, 255, ${alpha * 0.32})`);
-    glowGrad.addColorStop(0.5, `rgba(0, 102, 255, ${alpha * 0.12})`);
+    // Soft atmospheric radial aura behind the logo
+    const glowGrad = ctx.createRadialGradient(0, 0, logoSize * 0.1, 0, 0, logoSize * 0.72);
+    glowGrad.addColorStop(0, `rgba(0, 240, 255, ${alpha * 0.38})`);
+    glowGrad.addColorStop(0.5, `rgba(0, 102, 255, ${alpha * 0.16})`);
     glowGrad.addColorStop(1, 'transparent');
     ctx.fillStyle = glowGrad;
     ctx.beginPath();
-    ctx.arc(0, 0, logoSize * 0.85, 0, Math.PI * 2);
+    ctx.arc(0, 0, logoSize * 0.72, 0, Math.PI * 2);
     ctx.fill();
 
-    // 2. Crisp Solid White Stroke Outline Around Logo Contour
-    const silhouette = getWhiteSilhouette(item.img);
-    const strokeRadius = Math.max(3.0, Math.min(7.0, 5.0 * (logoSize / 220)));
-    const numSamples = 24;
-
-    if (silhouette) {
-      ctx.globalAlpha = alpha;
-      // Soft dark drop-shadow behind the white stroke for high contrast & pop
-      ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
-      ctx.shadowBlur = Math.max(8, 16 * (logoSize / 220));
-
-      for (let i = 0; i < numSamples; i++) {
-        const angle = (i / numSamples) * Math.PI * 2;
-        const ox = Math.cos(angle) * strokeRadius;
-        const oy = Math.sin(angle) * strokeRadius;
-        ctx.drawImage(silhouette, -logoSize / 2 + ox, -logoSize / 2 + oy, logoSize, logoSize);
-      }
-      ctx.shadowBlur = 0; // Reset shadow
-    }
-
-    // 3. Draw full-color exact uploaded logo PNG on top
+    // Draw the exact uploaded logo PNG
     if (item.img && item.img.complete && item.img.naturalWidth > 0) {
       ctx.globalAlpha = alpha;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
+      ctx.shadowBlur = isMobile ? 12 : 20;
       ctx.drawImage(item.img, -logoSize / 2, -logoSize / 2, logoSize, logoSize);
-      ctx.globalAlpha = 1.0;
     }
-
-    // 4. Name Below Each Logo: BLENDER, UNREAL ENGINE, HIGGSFIELD, AFTER EFFECTS
-    const textY = logoSize / 2 + Math.max(26, 38 * (logoSize / 220));
-    const fontSize = Math.max(14, Math.round(18 * (logoSize / 220)));
-    
-    ctx.font = `800 ${fontSize}px "Syne", "Cabinet Grotesk", system-ui, -apple-system, sans-serif`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-
-    const label = item.name;
-    const textMetrics = ctx.measureText(label);
-    const pillPadX = Math.max(16, 22 * (logoSize / 220));
-    const pillPadY = Math.max(8, 11 * (logoSize / 220));
-    const pillW = textMetrics.width + pillPadX * 2;
-    const pillH = fontSize + pillPadY * 2;
-    const pillRadius = pillH / 2;
-
-    // Dark obsidian glass pill badge
-    ctx.fillStyle = `rgba(6, 12, 28, ${alpha * 0.94})`;
-    ctx.strokeStyle = `rgba(0, 240, 255, ${alpha * 0.85})`;
-    ctx.lineWidth = Math.max(1.5, 2.0 * (logoSize / 220));
-
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.85)';
-    ctx.shadowBlur = 12;
-
-    ctx.beginPath();
-    if (ctx.roundRect) {
-      ctx.roundRect(-pillW / 2, textY - pillH / 2, pillW, pillH, pillRadius);
-    } else {
-      ctx.rect(-pillW / 2, textY - pillH / 2, pillW, pillH);
-    }
-    ctx.fill();
-    ctx.stroke();
-
-    // Subtle glowing cyan dot accents on pill ends
-    ctx.fillStyle = `rgba(0, 240, 255, ${alpha * 0.95})`;
-    ctx.shadowColor = 'rgba(0, 240, 255, 0.7)';
-    ctx.shadowBlur = 6;
-    ctx.beginPath();
-    ctx.arc(-pillW / 2 + pillPadX * 0.5, textY, 3, 0, Math.PI * 2);
-    ctx.arc(pillW / 2 - pillPadX * 0.5, textY, 3, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Crisp pure white title typography
-    ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.9)';
-    ctx.shadowBlur = 4;
-    ctx.fillText(label, 0, textY + 1);
-    ctx.shadowBlur = 0;
 
     ctx.restore();
   }
@@ -400,14 +317,19 @@
   // MAIN RENDER LOOP
   // -------------------------------------------------------------
   function render() {
+    if (!isCanvasActive) {
+      animationFrameId = null;
+      return;
+    }
+
     ctx.clearRect(0, 0, width, height);
 
-    // Smooth Cursor Lerp
+    // Smooth Cursor / Touch Lerp
     mouseX += (targetMouseX - mouseX) * 0.08;
     mouseY += (targetMouseY - mouseY) * 0.08;
 
     // Smooth Illusion Progress Lerp
-    illusionProgress += (targetIllusionProgress - illusionProgress) * 0.075;
+    illusionProgress += (targetIllusionProgress - illusionProgress) * 0.08;
 
     const centerX = width * 0.5;
     const centerY = height * 0.5;
@@ -415,39 +337,40 @@
     const fov = Math.max(width, height) * 0.88;
     const viewDist = 400;
 
-    // Base radius dynamically scaled to sweep beyond screen edges!
+    // Base radius scaled to sweep beyond screen boundaries
     const baseRadius = cornerDist * 1.30;
 
     // -----------------------------------------------------------
-    // 1. CENTRAL CYAN-SAPPHIRE OPTICAL SINGULARITY (Pulsing dark blue core)
+    // 1. CENTRAL OPTICAL SINGULARITY (Pulsing Cyan-Sapphire Core)
     // -----------------------------------------------------------
     const pulse = (Math.sin(Date.now() * 0.0025) + 1) * 0.5;
-    const coreIntensity = Math.min(1, 0.25 + illusionProgress * 0.75);
-    const centerGrad = ctx.createRadialGradient(centerX, centerY, 5, centerX, centerY, 340);
+    const coreIntensity = Math.min(1, 0.30 + illusionProgress * 0.70);
+    const centerGrad = ctx.createRadialGradient(centerX, centerY, 5, centerX, centerY, isMobile ? 260 : 340);
     centerGrad.addColorStop(0, `rgba(224, 247, 255, ${0.85 * coreIntensity + pulse * 0.15})`);
     centerGrad.addColorStop(0.18, `rgba(0, 240, 255, ${0.70 * coreIntensity + pulse * 0.10})`);
-    centerGrad.addColorStop(0.45, `rgba(0, 102, 255, ${0.50 * coreIntensity})`);
-    centerGrad.addColorStop(0.75, `rgba(10, 25, 70, ${0.35 * coreIntensity})`);
+    centerGrad.addColorStop(0.45, `rgba(0, 102, 255, ${0.48 * coreIntensity})`);
+    centerGrad.addColorStop(0.75, `rgba(10, 25, 70, ${0.30 * coreIntensity})`);
     centerGrad.addColorStop(1, 'transparent');
 
     ctx.fillStyle = centerGrad;
     ctx.beginPath();
-    ctx.arc(centerX, centerY, 340, 0, Math.PI * 2);
+    ctx.arc(centerX, centerY, isMobile ? 260 : 340, 0, Math.PI * 2);
     ctx.fill();
 
     // -----------------------------------------------------------
-    // 2. FULL-SCREEN CONCENTRIC SIMPLE ROUNDS
+    // 2. CONCENTRIC SIMPLE ROUNDS ILLUSION TUNNEL
     // -----------------------------------------------------------
     const cameraZ = illusionProgress * tunnelConfig.cameraSpeed;
     const inIllusion = illusionProgress > 0.01;
     const illusionAlpha = Math.min(1, illusionProgress * 3.5);
 
     if (inIllusion) {
-      for (let i = 0; i < tunnelConfig.ringCount; i++) {
-        const initialZ = (i / tunnelConfig.ringCount) * tunnelConfig.maxDepth;
+      const activeRings = isMobile ? 20 : tunnelConfig.ringCount;
+      for (let i = 0; i < activeRings; i++) {
+        const initialZ = (i / activeRings) * tunnelConfig.maxDepth;
         let relZ = (initialZ - (cameraZ % tunnelConfig.maxDepth) + tunnelConfig.maxDepth) % tunnelConfig.maxDepth;
 
-        if (relZ < 20) continue; // Behind near plane
+        if (relZ < 20) continue;
 
         const scale = fov / (viewDist + relZ);
         const ringRadius = baseRadius * scale;
@@ -455,17 +378,17 @@
         const alpha = depthAlpha * illusionAlpha;
 
         // Subtle organic float offset
-        const waveX = Math.sin((i * 0.25) + (illusionProgress * Math.PI * 2.8)) * (35 * scale);
-        const waveY = Math.cos((i * 0.2) + (illusionProgress * Math.PI * 2.2)) * (25 * scale);
+        const waveX = Math.sin((i * 0.25) + (illusionProgress * Math.PI * 2.8)) * (25 * scale);
+        const waveY = Math.cos((i * 0.2) + (illusionProgress * Math.PI * 2.2)) * (20 * scale);
 
-        // Perspective camera steering with mouse
-        const steerX = mouseX * 55 * Math.min(1, 1 / scale);
-        const steerY = mouseY * 40 * Math.min(1, 1 / scale);
+        // Perspective camera steering with touch/mouse
+        const steerX = mouseX * (isMobile ? 35 : 55) * Math.min(1, 1 / scale);
+        const steerY = mouseY * (isMobile ? 25 : 40) * Math.min(1, 1 / scale);
 
         const ringX = centerX + waveX + steerX;
         const ringY = centerY + waveY + steerY;
 
-        // Radiant Electric Sapphire into Neon Cyan Gradient for Simple Round Edge
+        // Radiant Electric Sapphire into Neon Cyan Gradient
         const strokeGrad = ctx.createLinearGradient(
           ringX - ringRadius, ringY - ringRadius,
           ringX + ringRadius, ringY + ringRadius
@@ -475,21 +398,21 @@
         strokeGrad.addColorStop(0.70, `rgba(0, 102, 255, ${alpha * 0.88})`);
         strokeGrad.addColorStop(1, `rgba(8, 28, 80, ${alpha * 0.70})`);
 
-        // 1. Primary Full-Screen Radiant Round
+        // Primary Round
         ctx.beginPath();
         ctx.arc(ringX, ringY, ringRadius, 0, Math.PI * 2);
         ctx.strokeStyle = strokeGrad;
-        ctx.lineWidth = Math.max(2.2, 6.2 * scale);
+        ctx.lineWidth = Math.max(isMobile ? 1.8 : 2.2, (isMobile ? 4.5 : 6.2) * scale);
         ctx.stroke();
 
-        // 2. Stepped Concentric Middle Round (Tiered depth in electric cyan)
+        // Stepped Concentric Middle Round
         ctx.beginPath();
         ctx.arc(ringX, ringY, ringRadius * 0.88, 0, Math.PI * 2);
         ctx.strokeStyle = `rgba(0, 210, 255, ${alpha * 0.75})`;
-        ctx.lineWidth = Math.max(1.4, 3.2 * scale);
+        ctx.lineWidth = Math.max(1.2, 3.0 * scale);
         ctx.stroke();
 
-        // 3. Inner Precision Hairline Round (Sapphire blue accent)
+        // Inner Precision Hairline Round
         if (i % 2 === 0) {
           ctx.beginPath();
           ctx.arc(ringX, ringY, ringRadius * 0.76, 0, Math.PI * 2);
@@ -500,7 +423,7 @@
       }
 
       // ---------------------------------------------------------
-      // 3. FLOATING CYAN & SAPPHIRE BEADS (Smooth Spatial Droplets)
+      // 3. FLOATING CYAN & SAPPHIRE BEADS / DROPLETS
       // ---------------------------------------------------------
       goldenBeads.forEach(b => {
         b.pulse += 0.02;
@@ -522,44 +445,41 @@
         ctx.arc(projX, projY, size, 0, Math.PI * 2);
         ctx.fill();
 
-        // Soft outer halo on close beads
-        if (scale > 0.4) {
+        if (scale > 0.4 && !isMobile) {
           ctx.fillStyle = b.color === '#00f0ff'
             ? `rgba(0, 240, 255, ${alpha * 0.28})`
             : `rgba(0, 102, 255, ${alpha * 0.28})`;
           ctx.beginPath();
-          ctx.arc(projX, projY, size * 2.3, 0, Math.PI * 2);
+          ctx.arc(projX, projY, size * 2.2, 0, Math.PI * 2);
           ctx.fill();
         }
       });
 
       // ---------------------------------------------------------
-      // 4. DRAW EXACT UPLOADED LOGO PNGs (NO TEXT, NO OUTLINES)
-      // Sequenced on scroll:
-      // Scroll into circles first -> Blender -> Unreal -> Higgsfield -> After Effects
+      // 4. DRAW EXACT UPLOADED LOGO PNGs IN SEQUENCE
       // ---------------------------------------------------------
       milestoneLogos.forEach(item => {
-        drawCleanLogoPNG(item, rawProgress, fov, viewDist, centerX, centerY);
+        drawCleanLogoPNG(item, illusionProgress, fov, viewDist, centerX, centerY);
       });
     }
 
     // -----------------------------------------------------------
     // 5. THE 3D REFRACTIVE GLASS CUBE (Interactive Vessel)
-    // Sits below Title Card in Hero, dives deeper on scroll,
-    // steered actively by cursor throughout the illusion!
+    // Sits gracefully below Title Card in Hero, dives deeper into
+    // the vortex center on scroll, steered actively by cursor/touch!
     // -----------------------------------------------------------
-    heroCube.rotX += heroCube.speedX + (mouseY * 0.004);
-    heroCube.rotY += heroCube.speedY + (mouseX * 0.005);
+    heroCube.rotX += heroCube.speedX + (mouseY * 0.0035);
+    heroCube.rotY += heroCube.speedY + (mouseX * 0.0045);
     heroCube.rotZ += heroCube.speedZ;
 
-    const heroDrop = Math.min(200, height * 0.22);
-    const heroCubeX = centerX + (mouseX * 110);
-    const heroCubeY = centerY + heroDrop + (mouseY * 80);
-    const heroScale = 1.05;
+    const heroDrop = isMobile ? Math.min(130, height * 0.16) : Math.min(180, height * 0.20);
+    const heroCubeX = centerX + (mouseX * (isMobile ? 55 : 95));
+    const heroCubeY = centerY + heroDrop + (mouseY * (isMobile ? 40 : 70));
+    const heroScale = isMobile ? 0.85 : 1.05;
 
-    const illusionCubeX = centerX + (mouseX * 150);
-    const illusionCubeY = centerY + (mouseY * 120);
-    const illusionScale = 0.95 + Math.sin(illusionProgress * Math.PI) * 0.18;
+    const illusionCubeX = centerX + (mouseX * (isMobile ? 75 : 130));
+    const illusionCubeY = centerY + (mouseY * (isMobile ? 60 : 100));
+    const illusionScale = (isMobile ? 0.78 : 0.95) + Math.sin(illusionProgress * Math.PI) * 0.15;
 
     const cubeX = heroCubeX + (illusionCubeX - heroCubeX) * illusionProgress;
     const cubeY = heroCubeY + (illusionCubeY - heroCubeY) * illusionProgress;
@@ -574,8 +494,10 @@
   // DRAW 3D REFRACTIVE GLASS CUBE WITH CHROMATIC DISPERSION
   // -------------------------------------------------------------
   function drawRefractiveGlassCube(cx, cy, overallScale) {
-    const sOuter = heroCube.size * overallScale;
-    const sInner = (heroCube.size - heroCube.wallThickness) * overallScale;
+    const baseSize = isMobile ? 85 : 125;
+    const thickness = isMobile ? 14 : 22;
+    const sOuter = baseSize * overallScale;
+    const sInner = (baseSize - thickness) * overallScale;
 
     const projOuter = [];
     const projInner = [];
@@ -590,7 +512,7 @@
       po.rotateZ(heroCube.rotZ);
       projOuter.push({ x: po.x + cx, y: po.y + cy, z: po.z, scale: overallScale });
 
-      // Inner (Refractive cavity)
+      // Inner
       const pi = new Point3D(bv[0] * sInner, bv[1] * sInner, bv[2] * sInner);
       pi.rotateX(heroCube.rotX);
       pi.rotateY(heroCube.rotY);
@@ -628,9 +550,9 @@
       if (normalZ > 0) {
         // Front-facing: Radiant electric cyan & sapphire glass reflection
         const faceGrad = ctx.createLinearGradient(p0.x, p0.y, p2.x, p2.y);
-        faceGrad.addColorStop(0, 'rgba(0, 240, 255, 0.20)');
+        faceGrad.addColorStop(0, 'rgba(0, 240, 255, 0.22)');
         faceGrad.addColorStop(0.5, 'rgba(0, 102, 255, 0.12)');
-        faceGrad.addColorStop(1, 'rgba(10, 30, 90, 0.22)');
+        faceGrad.addColorStop(1, 'rgba(10, 30, 90, 0.24)');
         ctx.fillStyle = faceGrad;
         ctx.fill();
       } else {
@@ -641,8 +563,8 @@
     });
 
     // 2. Draw Inner Refracted Wireframe Cavity
-    ctx.strokeStyle = 'rgba(0, 240, 255, 0.32)';
-    ctx.lineWidth = Math.max(1, 1.4 * overallScale);
+    ctx.strokeStyle = 'rgba(0, 240, 255, 0.35)';
+    ctx.lineWidth = Math.max(1, 1.3 * overallScale);
     cubeEdges.forEach(([i1, i2]) => {
       const p1 = projInner[i1];
       const p2 = projInner[i2];
@@ -653,33 +575,33 @@
     });
 
     // 3. Chromatic Dispersion on Outer Bevel Edges
-    // Electric Sapphire Channel (shifted -1.8px)
+    // Electric Sapphire Channel (offset -1.6px)
     ctx.strokeStyle = 'rgba(0, 102, 255, 0.70)';
-    ctx.lineWidth = Math.max(1.5, 3.2 * overallScale);
+    ctx.lineWidth = Math.max(1.4, (isMobile ? 2.4 : 3.0) * overallScale);
     cubeEdges.forEach(([i1, i2]) => {
       const p1 = projOuter[i1];
       const p2 = projOuter[i2];
       ctx.beginPath();
-      ctx.moveTo(p1.x - 1.8, p1.y - 1.8);
-      ctx.lineTo(p2.x - 1.8, p2.y - 1.8);
+      ctx.moveTo(p1.x - 1.6, p1.y - 1.6);
+      ctx.lineTo(p2.x - 1.6, p2.y - 1.6);
       ctx.stroke();
     });
 
-    // Radiant Neon Cyan Channel (shifted +1.8px)
+    // Radiant Neon Cyan Channel (offset +1.6px)
     ctx.strokeStyle = 'rgba(0, 240, 255, 0.70)';
-    ctx.lineWidth = Math.max(1.5, 3.2 * overallScale);
+    ctx.lineWidth = Math.max(1.4, (isMobile ? 2.4 : 3.0) * overallScale);
     cubeEdges.forEach(([i1, i2]) => {
       const p1 = projOuter[i1];
       const p2 = projOuter[i2];
       ctx.beginPath();
-      ctx.moveTo(p1.x + 1.8, p1.y + 1.8);
-      ctx.lineTo(p2.x + 1.8, p2.y + 1.8);
+      ctx.moveTo(p1.x + 1.6, p1.y + 1.6);
+      ctx.lineTo(p2.x + 1.6, p2.y + 1.6);
       ctx.stroke();
     });
 
-    // Primary Ice White / Diamond Core Edge
-    ctx.strokeStyle = 'rgba(230, 250, 255, 0.98)';
-    ctx.lineWidth = Math.max(1.8, 3.8 * overallScale);
+    // Core Ice-White Brilliant Edge
+    ctx.strokeStyle = 'rgba(235, 250, 255, 0.98)';
+    ctx.lineWidth = Math.max(1.6, (isMobile ? 2.6 : 3.6) * overallScale);
     cubeEdges.forEach(([i1, i2]) => {
       const p1 = projOuter[i1];
       const p2 = projOuter[i2];
@@ -689,24 +611,23 @@
       ctx.stroke();
     });
 
-    // 4. Specular Glint Stars on Outer Corner Vertices
+    // 4. Specular Corner Sparkles
     projOuter.forEach((p, idx) => {
-      if (p.z < 0) { // Facing camera
-        const glintAlpha = Math.min(1, Math.max(0, -p.z / (180 * overallScale)));
+      if (p.z < 0) {
+        const glintAlpha = Math.min(1, Math.max(0, -p.z / (160 * overallScale)));
         ctx.fillStyle = `rgba(255, 255, 255, ${glintAlpha * 0.95})`;
         ctx.beginPath();
-        ctx.arc(p.x, p.y, 4 * overallScale, 0, Math.PI * 2);
+        ctx.arc(p.x, p.y, (isMobile ? 3 : 4) * overallScale, 0, Math.PI * 2);
         ctx.fill();
 
-        // Cross sparkle on dominant corners
-        if (idx === 0 || idx === 1 || idx === 2) {
+        if ((idx === 0 || idx === 1 || idx === 2) && !isMobile) {
           ctx.strokeStyle = `rgba(0, 240, 255, ${glintAlpha * 0.85})`;
-          ctx.lineWidth = 1.5;
+          ctx.lineWidth = 1.4;
           ctx.beginPath();
-          ctx.moveTo(p.x - 10 * overallScale, p.y);
-          ctx.lineTo(p.x + 10 * overallScale, p.y);
-          ctx.moveTo(p.x, p.y - 10 * overallScale);
-          ctx.lineTo(p.x, p.y + 10 * overallScale);
+          ctx.moveTo(p.x - 8 * overallScale, p.y);
+          ctx.lineTo(p.x + 8 * overallScale, p.y);
+          ctx.moveTo(p.x, p.y - 8 * overallScale);
+          ctx.lineTo(p.x, p.y + 8 * overallScale);
           ctx.stroke();
         }
       }
