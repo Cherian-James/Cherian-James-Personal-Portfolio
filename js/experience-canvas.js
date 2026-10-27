@@ -1,16 +1,15 @@
 /**
  * CHERIAN JAMES - FULL-SCREEN ILLUSION TUNNEL & PIPELINE LOGOS (OPTIMIZED FOR MOBILE & DESKTOP)
  * 
- * 1. Title Card Zone: Clean, unhurried reading space on top with the 3D Glass Cube floating below it.
+ * 1. Title Card Zone: Clean, unhurried reading space on top with pulsing singularity core.
  * 2. Full-Screen Concentric Rings Tunnel: Camera dives deep into golden/cyan circular portal rounds.
- * 3. 3D Glass Cube: Navigates with cursor/touch, diving into the vortex center.
- * 4. Exact Uploaded Logo PNGs (Clean, no text labels, no synthetic outlines):
+ * 3. Exact Uploaded Logo PNGs (Clean PNGs, no text, no synthetic outlines):
  *    - 1st: Blender PNG
  *    - 2nd: Unreal Engine PNG
  *    - 3rd: Higgsfield AI PNG
  *    - 4th: After Effects PNG
- * 5. Climax: "WELCOME TO MY WORKS" reveals smoothly, leading into the Selected Works section.
- * 6. Responsive: Optimized runways, touch tilt gestures, and mobile DPR scaling for 60 FPS.
+ * 4. Climax: "WELCOME TO MY WORKS" reveals smoothly, leading into the Selected Works section.
+ * 5. Responsive: Optimized runways, touch tilt gestures, and mobile DPR scaling for 60 FPS.
  */
 
 (function () {
@@ -188,74 +187,6 @@
         color: Math.random() > 0.45 ? '#00f0ff' : '#0066ff',
         pulse: Math.random() * Math.PI * 2
       });
-    }
-  }
-
-  // -------------------------------------------------------------
-  // 3D GLASS CUBE (The Interactive Vessel)
-  // -------------------------------------------------------------
-  const heroCube = {
-    size: 130,
-    rotX: 0.35,
-    rotY: 0.45,
-    rotZ: 0.15,
-    speedX: 0.0035,
-    speedY: 0.0055,
-    speedZ: 0.002
-  };
-
-  const baseCubeVertices = [
-    [-1, -1, -1], [1, -1, -1], [1, 1, -1], [-1, 1, -1],
-    [-1, -1,  1], [1, -1,  1], [1, 1,  1], [-1, 1,  1]
-  ];
-
-  const cubeEdges = [
-    [0, 1], [1, 2], [2, 3], [3, 0], // Back
-    [4, 5], [5, 6], [6, 7], [7, 4], // Front
-    [0, 4], [1, 5], [2, 6], [3, 7]  // Connectors
-  ];
-
-  const cubeFaces = [
-    [0, 1, 2, 3], // Back
-    [4, 5, 6, 7], // Front
-    [0, 1, 5, 4], // Top
-    [2, 3, 7, 6], // Bottom
-    [0, 3, 7, 4], // Left
-    [1, 2, 6, 5]  // Right
-  ];
-
-  class Point3D {
-    constructor(x = 0, y = 0, z = 0) {
-      this.x = x;
-      this.y = y;
-      this.z = z;
-    }
-    rotateX(angle) {
-      const cos = Math.cos(angle);
-      const sin = Math.sin(angle);
-      const y = this.y * cos - this.z * sin;
-      const z = this.y * sin + this.z * cos;
-      this.y = y;
-      this.z = z;
-      return this;
-    }
-    rotateY(angle) {
-      const cos = Math.cos(angle);
-      const sin = Math.sin(angle);
-      const x = this.x * cos + this.z * sin;
-      const z = -this.x * sin + this.z * cos;
-      this.x = x;
-      this.z = z;
-      return this;
-    }
-    rotateZ(angle) {
-      const cos = Math.cos(angle);
-      const sin = Math.sin(angle);
-      const x = this.x * cos - this.y * sin;
-      const y = this.x * sin + this.y * cos;
-      this.x = x;
-      this.y = y;
-      return this;
     }
   }
 
@@ -463,175 +394,7 @@
       });
     }
 
-    // -----------------------------------------------------------
-    // 5. THE 3D REFRACTIVE GLASS CUBE (Interactive Vessel)
-    // Sits gracefully below Title Card in Hero, dives deeper into
-    // the vortex center on scroll, steered actively by cursor/touch!
-    // -----------------------------------------------------------
-    heroCube.rotX += heroCube.speedX + (mouseY * 0.0035);
-    heroCube.rotY += heroCube.speedY + (mouseX * 0.0045);
-    heroCube.rotZ += heroCube.speedZ;
-
-    const heroDrop = isMobile ? Math.min(130, height * 0.16) : Math.min(180, height * 0.20);
-    const heroCubeX = centerX + (mouseX * (isMobile ? 55 : 95));
-    const heroCubeY = centerY + heroDrop + (mouseY * (isMobile ? 40 : 70));
-    const heroScale = isMobile ? 0.85 : 1.05;
-
-    const illusionCubeX = centerX + (mouseX * (isMobile ? 75 : 130));
-    const illusionCubeY = centerY + (mouseY * (isMobile ? 60 : 100));
-    const illusionScale = (isMobile ? 0.78 : 0.95) + Math.sin(illusionProgress * Math.PI) * 0.15;
-
-    const cubeX = heroCubeX + (illusionCubeX - heroCubeX) * illusionProgress;
-    const cubeY = heroCubeY + (illusionCubeY - heroCubeY) * illusionProgress;
-    const cubeScale = heroScale + (illusionScale - heroScale) * illusionProgress;
-
-    drawRefractiveGlassCube(cubeX, cubeY, cubeScale);
-
     animationFrameId = requestAnimationFrame(render);
-  }
-
-  // -------------------------------------------------------------
-  // DRAW 3D REFRACTIVE GLASS CUBE WITH CHROMATIC DISPERSION
-  // -------------------------------------------------------------
-  function drawRefractiveGlassCube(cx, cy, overallScale) {
-    const baseSize = isMobile ? 85 : 125;
-    const thickness = isMobile ? 14 : 22;
-    const sOuter = baseSize * overallScale;
-    const sInner = (baseSize - thickness) * overallScale;
-
-    const projOuter = [];
-    const projInner = [];
-
-    // Transform 8 Outer & Inner Vertices
-    for (let i = 0; i < 8; i++) {
-      const bv = baseCubeVertices[i];
-      // Outer
-      const po = new Point3D(bv[0] * sOuter, bv[1] * sOuter, bv[2] * sOuter);
-      po.rotateX(heroCube.rotX);
-      po.rotateY(heroCube.rotY);
-      po.rotateZ(heroCube.rotZ);
-      projOuter.push({ x: po.x + cx, y: po.y + cy, z: po.z, scale: overallScale });
-
-      // Inner
-      const pi = new Point3D(bv[0] * sInner, bv[1] * sInner, bv[2] * sInner);
-      pi.rotateX(heroCube.rotX);
-      pi.rotateY(heroCube.rotY);
-      pi.rotateZ(heroCube.rotZ);
-      projInner.push({ x: pi.x + cx, y: pi.y + cy, z: pi.z, scale: overallScale });
-    }
-
-    // Sort Faces for Depth Shading
-    const sortedFaces = cubeFaces.map((indices, fIdx) => {
-      let avgZ = 0;
-      indices.forEach(idx => avgZ += projOuter[idx].z);
-      avgZ /= indices.length;
-      return { indices, fIdx, avgZ };
-    }).sort((a, b) => a.avgZ - b.avgZ);
-
-    // 1. Draw Translucent Frosted Glass Faces
-    sortedFaces.forEach(face => {
-      const idx = face.indices;
-      const p0 = projOuter[idx[0]];
-      const p1 = projOuter[idx[1]];
-      const p2 = projOuter[idx[2]];
-      const p3 = projOuter[idx[3]];
-
-      const v1x = p1.x - p0.x, v1y = p1.y - p0.y;
-      const v2x = p2.x - p0.x, v2y = p2.y - p0.y;
-      const normalZ = v1x * v2y - v1y * v2x;
-
-      ctx.beginPath();
-      ctx.moveTo(p0.x, p0.y);
-      ctx.lineTo(p1.x, p1.y);
-      ctx.lineTo(p2.x, p2.y);
-      ctx.lineTo(p3.x, p3.y);
-      ctx.closePath();
-
-      if (normalZ > 0) {
-        // Front-facing: Radiant electric cyan & sapphire glass reflection
-        const faceGrad = ctx.createLinearGradient(p0.x, p0.y, p2.x, p2.y);
-        faceGrad.addColorStop(0, 'rgba(0, 240, 255, 0.22)');
-        faceGrad.addColorStop(0.5, 'rgba(0, 102, 255, 0.12)');
-        faceGrad.addColorStop(1, 'rgba(10, 30, 90, 0.24)');
-        ctx.fillStyle = faceGrad;
-        ctx.fill();
-      } else {
-        // Back-facing: Deep midnight navy tint
-        ctx.fillStyle = 'rgba(6, 12, 28, 0.50)';
-        ctx.fill();
-      }
-    });
-
-    // 2. Draw Inner Refracted Wireframe Cavity
-    ctx.strokeStyle = 'rgba(0, 240, 255, 0.35)';
-    ctx.lineWidth = Math.max(1, 1.3 * overallScale);
-    cubeEdges.forEach(([i1, i2]) => {
-      const p1 = projInner[i1];
-      const p2 = projInner[i2];
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.lineTo(p2.x, p2.y);
-      ctx.stroke();
-    });
-
-    // 3. Chromatic Dispersion on Outer Bevel Edges
-    // Electric Sapphire Channel (offset -1.6px)
-    ctx.strokeStyle = 'rgba(0, 102, 255, 0.70)';
-    ctx.lineWidth = Math.max(1.4, (isMobile ? 2.4 : 3.0) * overallScale);
-    cubeEdges.forEach(([i1, i2]) => {
-      const p1 = projOuter[i1];
-      const p2 = projOuter[i2];
-      ctx.beginPath();
-      ctx.moveTo(p1.x - 1.6, p1.y - 1.6);
-      ctx.lineTo(p2.x - 1.6, p2.y - 1.6);
-      ctx.stroke();
-    });
-
-    // Radiant Neon Cyan Channel (offset +1.6px)
-    ctx.strokeStyle = 'rgba(0, 240, 255, 0.70)';
-    ctx.lineWidth = Math.max(1.4, (isMobile ? 2.4 : 3.0) * overallScale);
-    cubeEdges.forEach(([i1, i2]) => {
-      const p1 = projOuter[i1];
-      const p2 = projOuter[i2];
-      ctx.beginPath();
-      ctx.moveTo(p1.x + 1.6, p1.y + 1.6);
-      ctx.lineTo(p2.x + 1.6, p2.y + 1.6);
-      ctx.stroke();
-    });
-
-    // Core Ice-White Brilliant Edge
-    ctx.strokeStyle = 'rgba(235, 250, 255, 0.98)';
-    ctx.lineWidth = Math.max(1.6, (isMobile ? 2.6 : 3.6) * overallScale);
-    cubeEdges.forEach(([i1, i2]) => {
-      const p1 = projOuter[i1];
-      const p2 = projOuter[i2];
-      ctx.beginPath();
-      ctx.moveTo(p1.x, p1.y);
-      ctx.lineTo(p2.x, p2.y);
-      ctx.stroke();
-    });
-
-    // 4. Specular Corner Sparkles
-    projOuter.forEach((p, idx) => {
-      if (p.z < 0) {
-        const glintAlpha = Math.min(1, Math.max(0, -p.z / (160 * overallScale)));
-        ctx.fillStyle = `rgba(255, 255, 255, ${glintAlpha * 0.95})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, (isMobile ? 3 : 4) * overallScale, 0, Math.PI * 2);
-        ctx.fill();
-
-        if ((idx === 0 || idx === 1 || idx === 2) && !isMobile) {
-          ctx.strokeStyle = `rgba(0, 240, 255, ${glintAlpha * 0.85})`;
-          ctx.lineWidth = 1.4;
-          ctx.beginPath();
-          ctx.moveTo(p.x - 8 * overallScale, p.y);
-          ctx.lineTo(p.x + 8 * overallScale, p.y);
-          ctx.moveTo(p.x, p.y - 8 * overallScale);
-          ctx.lineTo(p.x, p.y + 8 * overallScale);
-          ctx.stroke();
-        }
-      }
-    });
   }
 
   window.addEventListener('resize', resize);
