@@ -593,7 +593,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .mobile-nav-drawer {
-  display: none;
+  display: none !important;
 }
 
 /* ==========================================================================
@@ -2924,7 +2924,7 @@ textarea.form-control {
     padding: 6px;
   }
   .mobile-nav-drawer {
-    display: flex;
+    display: flex !important;
     flex-direction: column;
     position: fixed;
     top: 60px;
